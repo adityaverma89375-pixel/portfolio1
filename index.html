@@ -1,215 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aditya Verma — Computational Biology & BCI Portfolio</title>
-  <meta name="description" content="Personal STEM portfolio focusing on computational biology, neurotech, and metabolic pathway modeling." />
-  
-  <!-- Open Graph / Social Metadata -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Aditya Verma — STEM & Computational Biology Portfolio" />
-  <meta property="og:description" content="Engineering computational tools at the intersection of neuroscience, BCIs, and genomics." />
-  <meta property="og:url" content="https://portfolio1-five-henna.vercel.app/" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aditya Verma — Neuroscience, BCIs & Computational Biology</title>
+<meta name="description" content="Aditya Verma — Researcher focusing on brain-computer interfaces, neural signal decoding, and computational biology." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0b0f19;
+    --bg-elevated: #0e1524;
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-hover: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #e8edf5;
+    --text-muted: #8b93a7;
+    --text-faint: #5a6178;
+    --cyan: #00f2fe;
+    --blue: #3a7bfd;
+    --gradient: linear-gradient(135deg, #00f2fe 0%, #3a7bfd 100%);
+    --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+    --font-body: "Inter", "Segoe UI", sans-serif;
+    --radius: 16px;
+    --max-width: 1160px;
+    --nav-h: 72px;
+  }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --surface: rgba(255, 255, 255, 0.03);
-      --surface-hover: rgba(255, 255, 255, 0.06);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(255, 255, 255, 0.14);
-      --text: #e8edf5;
-      --text-muted: #8b93a7;
-      --cyan: #00f2fe;
-      --blue: #3a7bfd;
-      --nav-h: 72px;
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(0, 242, 254, 0.25); color: #fff; }
+
+  /* ---------- Background layers ---------- */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, black 30%, transparent 80%);
+  }
+  .bg-glow {
+    position: fixed; z-index: 0; pointer-events: none; border-radius: 50%;
+    filter: blur(110px); opacity: 0.5;
+  }
+  .bg-glow--one {
+    width: 620px; height: 620px; top: -220px; right: -140px;
+    background: radial-gradient(circle, rgba(0,242,254,0.16), transparent 65%);
+  }
+  .bg-glow--two {
+    width: 560px; height: 560px; top: 42%; left: -220px;
+    background: radial-gradient(circle, rgba(58,123,253,0.14), transparent 65%);
+  }
+  .bg-glow--three {
+    width: 520px; height: 520px; bottom: -240px; right: -120px;
+    background: radial-gradient(circle, rgba(58,123,253,0.10), transparent 65%);
+  }
+
+  main, nav, footer { position: relative; z-index: 1; }
+
+  .wrap { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Navigation ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 50;
+    background: rgba(11, 15, 25, 0.72);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  nav.scrolled { border-bottom-color: var(--border); background: rgba(11, 15, 25, 0.85); }
+
+  .nav-inner {
+    max-width: var(--max-width); margin: 0 auto; height: 100%; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .logo {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+    letter-spacing: 0.02em; color: var(--text); text-decoration: none;
+    display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  }
+  .logo-mark {
+    width: 30px; height: 30px; border-radius: 9px; background: var(--gradient);
+    display: grid; place-items: center; font-size: 0.78rem; font-weight: 700; color: #06121f;
+    box-shadow: 0 0 18px rgba(0, 242, 254, 0.35);
+  }
+  .nav-links { display: flex; align-items: center; gap: 6px; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    padding: 8px 14px; border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface-hover); }
+
+  .nav-cta {
+    color: #06121f !important; background: var(--gradient) !important; font-weight: 600 !important;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.25);
+  }
+  .nav-cta:hover { filter: brightness(1.08); background: var(--gradient) !important; }
+
+  .nav-burger {
+    display: none; background: none; border: 1px solid var(--border-strong); border-radius: 10px;
+    width: 40px; height: 40px; cursor: pointer; color: var(--text);
+    align-items: center; justify-content: center;
+  }
+  .nav-burger svg { width: 20px; height: 20px; }
+
+  @media (max-width: 720px) {
+    .nav-burger { display: flex; }
+    .nav-links {
+      position: absolute; top: var(--nav-h); left: 16px; right: 16px;
+      flex-direction: column; align-items: stretch; gap: 4px;
+      background: rgba(14, 21, 36, 0.97); border: 1px solid var(--border);
+      border-radius: 16px; padding: 12px; display: none;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
     }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 16px; }
+  }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* ---------- Sections ---------- */
+  section { padding: 96px 0; }
+  @media (max-width: 720px) { section { padding: 72px 0; } }
 
-    html, body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      overflow-y: auto !important;
-      scroll-behavior: smooth;
-    }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: ""; width: 24px; height: 1px; background: var(--gradient); display: inline-block;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+    font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px;
+  }
 
-    h1, h2, h3, .nav-logo { font-family: 'Space Grotesk', sans-serif; }
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100svh; display: flex; align-items: center; padding-top: var(--nav-h);
+    position: relative;
+  }
+  .hero-inner { width: 100%; }
 
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5%; background: rgba(11, 15, 25, 0.85);
-      backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid var(--border);
-    }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid var(--border-strong); border-radius: 999px;
+    padding: 7px 16px; font-size: 0.8rem; color: var(--text-muted);
+    background: var(--surface); backdrop-filter: blur(8px); margin-bottom: 32px;
+  }
+  .hero-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan); animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-    .nav-logo { font-weight: 700; color: #fff; text-decoration: none; font-size: 1.1rem; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 2rem; transition: color 0.2s; font-size: 0.95rem; }
-    .nav-links a:hover { color: var(--cyan); }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 5.6vw, 4.1rem);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.08;
+    max-width: 17ch; margin-bottom: 24px;
+  }
+  .hero h1 .grad {
+    background: var(--gradient);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .hero .sub {
+    font-size: clamp(1rem, 1.6vw, 1.15rem); color: var(--text-muted);
+    max-width: 56ch; margin-bottom: 40px;
+  }
+  .hero .sub strong { color: var(--text); font-weight: 600; }
 
-    main { max-width: 1100px; margin: 0 auto; padding: calc(var(--nav-h) + 4rem) 2rem 6rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 64px; }
 
-    section { margin-bottom: 6rem; }
-    
-    .hero { margin-top: 2rem; }
-    .badge {
-      display: inline-block; padding: 6px 14px; border-radius: 20px;
-      background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.2);
-      color: var(--cyan); font-size: 0.85rem; font-weight: 500; margin-bottom: 1.5rem;
-    }
-    .hero h1 { font-size: 3rem; line-height: 1.2; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
-    .hero h1 span { color: var(--cyan); }
-    .hero p { color: var(--text-muted); font-size: 1.15rem; max-width: 680px; line-height: 1.6; margin-bottom: 2rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+    padding: 14px 28px; border-radius: 12px; text-decoration: none; cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+  .btn svg { width: 17px; height: 17px; transition: transform 0.2s ease; }
+  .btn:hover svg { transform: translateX(3px); }
 
-    .btn-group { display: flex; gap: 1rem; }
-    .btn {
-      padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none;
-      font-size: 0.95rem; transition: all 0.2s ease;
-    }
-    .btn-primary { background: linear-gradient(135deg, var(--cyan), var(--blue)); color: #0b0f19; }
-    .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
-    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  .btn-primary {
+    color: #06121f; background: var(--gradient);
+    box-shadow: 0 8px 30px rgba(0, 242, 254, 0.22);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0, 242, 254, 0.32); }
 
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .btn-ghost {
+    color: var(--text); background: var(--surface); border-color: var(--border-strong);
+    backdrop-filter: blur(8px);
+  }
+  .btn-ghost:hover {
+    transform: translateY(-2px); background: var(--surface-hover); border-color: rgba(0, 242, 254, 0.4);
+  }
 
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem; transition: border-color 0.2s, background 0.2s;
-    }
-    .card:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 40px; padding-top: 36px;
+    border-top: 1px solid var(--border);
+  }
+  .stat .num {
+    font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .stat .lbl { font-size: 0.8rem; color: var(--text-faint); letter-spacing: 0.04em; }
+  @media (max-width: 560px) { .hero-stats { gap: 24px; } }
 
-    .card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; color: #fff; }
-    .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+  /* ---------- Cards / glass ---------- */
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  }
 
-    .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
-    .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+  /* ---------- About ---------- */
+  .about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+  @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
 
-    .model-controls {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem; margin-bottom: 2rem; background: rgba(0, 0, 0, 0.2); padding: 1.5rem; border-radius: 12px;
-    }
+  .about-bio { padding: 36px; }
+  .about-bio p { color: var(--text-muted); margin-bottom: 14px; max-width: 62ch; }
+  .about-bio p strong { color: var(--text); font-weight: 600; }
 
-    .control-group { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
-    .control-group input[type="range"] { accent-color: var(--cyan); }
+  .about-side { display: flex; flex-direction: column; gap: 24px; }
+  .about-card { padding: 24px 28px; }
+  .about-card h3 {
+    font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--cyan); margin-bottom: 14px;
+  }
+  .focus-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .focus-list li {
+    display: flex; gap: 10px; align-items: baseline; color: var(--text-muted); font-size: 0.92rem;
+  }
+  .focus-list li::before {
+    content: "◆"; font-size: 0.55rem; color: var(--blue); transform: translateY(-2px);
+  }
 
-    .reveal { opacity: 1 !important; transform: none !important; }
-  </style>
+  .mini-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .mini-metrics .m {
+    text-align: center; padding: 14px 8px; border-radius: 12px;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  }
+  .mini-metrics .m .v { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .mini-metrics .m .k { font-size: 0.68rem; color: var(--text-faint); letter-spacing: 0.06em; }
+
+  /* ---------- Projects ---------- */
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 980px) { .projects-grid { grid-template-columns: 1fr; } }
+
+  .project-card {
+    position: relative; overflow: hidden; padding: 30px 28px; display: flex; flex-direction: column;
+    min-height: 300px; cursor: default;
+  }
+  .project-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(0, 242, 254, 0.09), transparent 45%);
+    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0, 242, 254, 0.35);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 242, 254, 0.08);
+  }
+  .project-card .top-line {
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gradient); opacity: 0; transition: opacity 0.25s ease;
+  }
+  .project-card:hover .top-line { opacity: 1; }
+
+  .project-icon {
+    width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+    background: linear-gradient(135deg, rgba(0,242,254,0.12), rgba(58,123,253,0.12));
+    border: 1px solid rgba(0, 242, 254, 0.22); margin-bottom: 22px; color: var(--cyan);
+  }
+  .project-icon svg { width: 24px; height: 24px; }
+
+  .project-card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-bottom: 12px; }
+  .project-card p { color: var(--text-muted); font-size: 0.93rem; flex: 1; }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 22px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--cyan); padding: 6px 13px; border-radius: 999px;
+    background: rgba(0, 242, 254, 0.07); border: 1px solid rgba(0, 242, 254, 0.2);
+    width: fit-content;
+  }
+
+  .card-index {
+    position: absolute; top: 22px; right: 26px;
+    font-family: var(--font-display); font-size: 0.8rem; color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+
+  /* Clickable project cards */
+  .project-card { cursor: pointer; }
+  .project-card:hover .card-index { color: var(--cyan); }
+  .project-card:focus-visible {
+    outline: 2px solid var(--cyan); outline-offset: 4px;
+  }
+  .project-link-hint {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 14px;
+    font-size: 0.8rem; font-weight: 600; color: var(--text-faint);
+    transition: color 0.2s ease, gap 0.2s ease;
+  }
+  .project-link-hint svg { width: 14px; height: 14px; }
+  .project-card:hover .project-link-hint { color: var(--cyan); gap: 11px; }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5, 8, 15, 0.7);
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .modal {
+    position: relative; width: min(680px, 100%);
+    max-height: min(86vh, 780px); overflow-y: auto;
+    background: rgba(17, 24, 41, 0.88);
+    border: 1px solid var(--border-strong);
+    border-radius: 22px;
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 242, 254, 0.06);
+    padding: 40px;
+    transform: translateY(26px) scale(0.97); opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    scrollbar-width: thin; scrollbar-color: rgba(0,242,254,0.3) transparent;
+  }
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-thumb { background: rgba(0,242,254,0.25); border-radius: 999px; }
+  .modal-backdrop.open .modal { transform: none; opacity: 1; }
+
+  .modal-glow {
+    position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+    width: 480px; height: 240px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0,242,254,0.14), transparent 65%);
+    filter: blur(40px); pointer-events: none;
+  }
+
+  .modal-close {
+    position: absolute; top: 18px; right: 18px; z-index: 2;
+    width: 38px; height: 38px; border-radius: 11px; cursor: pointer;
+    display: grid; place-items: center;
+    color: var(--text-muted); background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .modal-close:hover {
+    color: #fff; background: rgba(0,242,254,0.12); border-color: rgba(0,242,254,0.4);
+    transform: rotate(90deg);
+  }
+  .modal-close svg { width: 17px; height: 17px; }
+
+  .modal-head { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
+  .modal-icon {
+    width: 54px; height: 54px; flex: none; border-radius: 15px; display: grid; place-items: center;
+    background: linear-gradient(135deg, rgba(0,242,254,0.14), rgba(58,123,253,0.14));
+    border: 1px solid rgba(0, 242, 254, 0.25); color: var(--cyan);
+  }
+  .modal-icon svg { width: 25px; height: 25px; }
+  .modal h3 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.02em; }
+  .modal .tag { margin-top: 10px; }
+
+  .modal-desc { color: var(--text-muted); font-size: 0.95rem; margin-top: 18px; }
+
+  .modal-section { margin-top: 28px; }
+  .modal-section h4 {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px;
+  }
+  .modal-section h4 svg { width: 15px; height: 15px; }
+
+  .modal-text { color: var(--text-muted); font-size: 0.92rem; }
+
+  .feature-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .feature-list li {
+    display: flex; gap: 11px; align-items: baseline; color: var(--text-muted); font-size: 0.92rem;
+  }
+  .feature-list li::before {
+    content: "◆"; font-size: 0.5rem; color: var(--blue); flex: none; transform: translateY(-2px);
+  }
+
+  .modal-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .modal-pills .pill { padding: 8px 15px; font-size: 0.82rem; }
+
+  .modal-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .modal-links .btn.is-disabled {
+    opacity: 0.45; cursor: not-allowed; box-shadow: none;
+  }
+  .modal-links .btn.is-disabled:hover {
+    transform: none; box-shadow: none; background: var(--gradient);
+  }
+
+  @media (max-width: 560px) {
+    .modal { padding: 28px 22px; border-radius: 18px; }
+    .modal-links .btn { width: 100%; justify-content: center; }
+  }
+
+  /* ---------- Stack ---------- */
+  .stack-section .stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .stack-section .stack-grid { grid-template-columns: 1fr; } }
+
+  .stack-card { padding: 34px; }
+  .stack-card h3 {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; margin-bottom: 6px;
+  }
+  .stack-card .hint { font-size: 0.85rem; color: var(--text-faint); margin-bottom: 22px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 0.88rem; font-weight: 500; color: var(--text-muted);
+    padding: 10px 18px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    cursor: default; user-select: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pill .ico { width: 17px; height: 17px; display: block; color: var(--text-faint); transition: color 0.2s ease; }
+  .pill:hover {
+    color: #fff; border-color: rgba(0, 242, 254, 0.45);
+    background: rgba(0, 242, 254, 0.06); transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 242, 254, 0.12);
+  }
+  .pill:hover .ico { color: var(--cyan); }
+
+  /* ---------- Contact ---------- */
+  .contact-card {
+    padding: clamp(40px, 6vw, 72px); text-align: center; position: relative; overflow: hidden;
+  }
+  .contact-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(600px circle at 50% -20%, rgba(0, 242, 254, 0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .contact-card h2 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .contact-card p { color: var(--text-muted); max-width: 52ch; margin: 0 auto 36px; }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--border); padding: 36px 0; }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  }
+  .footer-note { color: var(--text-faint); font-size: 0.85rem; }
+  .footer-note a {
+    color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border-strong);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .footer-note a:hover { color: var(--cyan); border-color: rgba(0, 242, 254, 0.4); }
+
+  .socials { display: flex; gap: 10px; }
+  .socials a {
+    width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+    color: var(--text-muted); background: var(--surface); border: 1px solid var(--border);
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
+  .socials a:hover {
+    color: var(--cyan); border-color: rgba(0, 242, 254, 0.4); transform: translateY(-2px);
+    background: rgba(0, 242, 254, 0.06);
+  }
+  .socials svg { width: 19px; height: 19px; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal[data-delay="1"] { transition-delay: 0.1s; }
+  .reveal[data-delay="2"] { transition-delay: 0.2s; }
+  .reveal[data-delay="3"] { transition-delay: 0.3s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
 </head>
 <body>
 
-  <nav id="nav">
-    <a href="#" class="nav-logo">AV — Aditya Verma</a>
-    <div class="nav-links">
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--one" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--two" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--three" aria-hidden="true"></div>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top">
+      <span class="logo-mark">AV</span>
+      <span>Aditya&nbsp;Verma</span>
+    </a>
+    <button class="nav-burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="nav-links" id="navLinks">
       <a href="#about">About</a>
-      <a href="#work">Research</a>
-      <a href="#model">Simulation</a>
+      <a href="#work">Work</a>
       <a href="#stack">Stack</a>
+      <a href="#contact" class="nav-cta">Contact</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <main>
-    <!-- HERO SECTION -->
-    <section class="hero reveal" id="about">
-      <div class="badge">Available for research collaboration</div>
-      <h1>Engineering computational tools at the intersection of <span>neuroscience, BCIs, and genomics.</span></h1>
-      <p>I build computational biology simulations, neural signal decoding frameworks, and open-source models to analyze biological kinetics and brain-computer interactions.</p>
-      <div class="btn-group">
-        <a href="#work" class="btn btn-primary">Explore Work →</a>
-        <a href="#model" class="btn btn-secondary">Run Live Model</a>
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Available for research collaboration</div>
+      <h1>Engineering computational tools at the intersection of <span class="grad">neuroscience, BCIs, and genomics.</span></h1>
+      <p class="sub"><strong>Aditya Verma</strong> — Researcher focusing on brain-computer interfaces, neural signal decoding, and computational biology.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#work">
+          Explore Work
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#contact">Contact</a>
       </div>
-    </section>
-
-    <!-- RESEARCH & PROJECTS -->
-    <section class="reveal" id="work">
-      <h2>Featured Research & Projects</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3>Metabolic Pathway Kinetic Simulator</h3>
-          <p>Mathematical modeling of enzymatic cascades using ordinary differential equations (ODEs). Simulates substrate consumption and product inhibition in cellular metabolism.</p>
-          <div class="tag-list">
-            <span class="tag">Python</span>
-            <span class="tag">Chart.js</span>
-            <span class="tag">System Dynamics</span>
-          </div>
-        </div>
-        <div class="card">
-          <h3>EEG Signal Feature Extraction Pipeline</h3>
-          <p>Preprocessing and bandpower spectral density analysis of motor imagery EEG channels for real-time brain-computer interface signal decoding.</p>
-          <div class="tag-list">
-            <span class="tag">Neurotech</span>
-            <span class="tag">Signal Processing</span>
-            <span class="tag">BCI</span>
-          </div>
-        </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">3</div><div class="lbl">Featured projects</div></div>
+        <div class="stat"><div class="num">5</div><div class="lbl">Research domains</div></div>
+        <div class="stat"><div class="num">EEG</div><div class="lbl">Real-time decoding focus</div></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- INTERACTIVE SIMULATION -->
-    <section class="reveal" id="model">
-      <h2>Live Metabolic Model</h2>
-      <p style="color: var(--text-muted); margin-top: 0.5rem;">Adjust parameters to observe real-time substrate concentration kinetics via Michaelis-Menten equations.</p>
-      
-      <div class="card" style="margin-top: 1.5rem;">
-        <div class="model-controls">
-          <div class="control-group">
-            <label>Substrate Vmax ($V_1$)</label>
-            <input type="range" id="vmax1" min="1" max="20" value="10" step="0.5">
-          </div>
-          <div class="control-group">
-            <label>Substrate Km ($K_1$)</label>
-            <input type="range" id="km1" min="0.1" max="10" value="2" step="0.1">
-          </div>
-          <div class="control-group">
-            <label>Intermediate Vmax ($V_2$)</label>
-            <input type="range" id="vmax2" min="1" max="20" value="8" step="0.5">
-          </div>
-          <div class="control-group">
-            <label>Intermediate Km ($K_2$)</label>
-            <input type="range" id="km2" min="0.1" max="10" value="1.5" step="0.1">
-          </div>
-          <div class="control-group">
-            <label>Initial Substrate ($S_0$)</label>
-            <input type="range" id="s0" min="5" max="100" value="50" step="1">
-          </div>
-          <div class="control-group" style="flex-direction: row; align-items: center; gap: 0.5rem; justify-content: center;">
-            <input type="checkbox" id="feedback" checked>
-            <label for="feedback">Feedback Loop</label>
-          </div>
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-label reveal">01 · Focus Areas</div>
+      <h2 class="section-title reveal" data-delay="1">Where neural signals meet<br />the genome.</h2>
+      <div class="about-grid">
+        <div class="glass about-bio reveal" data-delay="1">
+          <p>My work sits at the point where <strong>neural computation</strong> meets clinical urgency. I build frameworks and pipelines that turn raw biological signal — from EEG waveforms to genomic variants — into decisions researchers and clinicians can act on.</p>
+          <p>On the <strong>neuroscience</strong> side, I design privacy-first BCI frameworks with real-time neural signal processing for wearable EEG systems. On the <strong>genomics</strong> side, my variant triage pipelines model p53 suppressor mutations — combining folding dynamics with structural context to separate passengers from drivers.</p>
+          <p>The through-line is simple: <strong>tools that shorten the distance between data and discovery.</strong></p>
         </div>
-
-        <canvas id="metabolicChart" width="800" height="350"></canvas>
-      </div>
-    </section>
-
-    <!-- TECHNICAL STACK -->
-    <section class="reveal" id="stack">
-      <h2>Technical Stack & Expertise</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>Computational Bio</h3>
-          <p>Cellular kinetics, metabolic pathway ODE modeling, structural molecular alignment, and sequence analysis.</p>
-        </div>
-        <div class="card">
-          <h3>Data Science & ML</h3>
-          <p>NumPy, SciPy, Pandas, scikit-learn, time-series data analysis, and signal processing filters.</p>
-        </div>
-        <div class="card">
-          <h3>Web & Tools</h3>
-          <p>JavaScript (ES6+), Chart.js, HTML5/CSS3, Git, Vercel, and Linux environments.</p>
+        <div class="about-side">
+          <div class="glass about-card reveal" data-delay="2">
+            <h3>Current Focus</h3>
+            <ul class="focus-list">
+              <li>Neural signal processing &amp; EEG decoding</li>
+              <li>Privacy-first BCI frameworks</li>
+              <li>Variant triage &amp; p53 mutation analysis pipelines</li>
+              <li>Structural biophysics pipelines</li>
+            </ul>
+          </div>
+          <div class="glass about-card reveal" data-delay="3">
+            <h3>Domains</h3>
+            <div class="mini-metrics">
+              <div class="m"><div class="v">BCI</div><div class="k">Brain-Comp. Interfaces</div></div>
+              <div class="m"><div class="v">NSD</div><div class="k">Neural Signal Decoding</div></div>
+              <div class="m"><div class="v">ONC</div><div class="k">Precision Oncology</div></div>
+              <div class="m"><div class="v">GDA</div><div class="k">Genomic Data Analysis</div></div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
+  <!-- ============ PROJECTS ============ -->
+  <section id="work">
+    <div class="wrap">
+      <div class="section-label reveal">02 · Featured Projects</div>
+      <h2 class="section-title reveal" data-delay="1">Selected work.</h2>
+      <div class="projects-grid">
+        <article class="glass project-card reveal tilt clickable" data-delay="1" data-project="neuroshield" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View NeuroShield-BCI details">
+          <span class="top-line"></span>
+          <span class="card-index">01</span>
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.45 2.1-1.17 2.83A4 4 0 0 1 12 10a4 4 0 0 1-2.83-1.17A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/><path d="M9.5 10.5 6 14v4"/><path d="M14.5 10.5 18 14v4"/><path d="M6 18h4M14 18h4"/></svg>
+          </div>
+          <h3>NeuroShield-BCI</h3>
+          <p>Decentralized, privacy-first BCI wearable framework designed for neural data security and real-time EEG signal decoding.</p>
+          <span class="tag">BCI / Signal Processing</span>
+          <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </article>
+
+        <article class="glass project-card reveal tilt clickable" data-delay="2" data-project="variant-triage" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View In Silico Variant Triage details">
+          <span class="top-line"></span>
+          <span class="card-index">02</span>
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-2"/><path d="M9 12h6"/></svg>
+          </div>
+          <h3>In Silico Variant Triage</h3>
+          <p>Analytical pipeline modeling p53 suppressor mutations and protein folding dynamics.</p>
+          <span class="tag">Computational Biology</span>
+          <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </article>
+
+        <article class="glass project-card reveal tilt clickable" data-delay="3" data-project="metabolic" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View Metabolic Pathway Simulator details">
+          <span class="top-line"></span>
+          <span class="card-index">03</span>
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.3 7.2 10 10.4M17.7 7.2 14 10.4M6.3 16.8 10 13.6M17.7 16.8 14 13.6"/></svg>
+          </div>
+          <h3>Metabolic Pathway Simulator</h3>
+          <p>Visual modeling platform for cellular respiration and metabolic gene expression.</p>
+          <span class="tag">Systems Biology</span>
+          <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STACK ============ -->
+  <section id="stack" class="stack-section">
+    <div class="wrap">
+      <div class="section-label reveal">03 · Technical Stack</div>
+      <h2 class="section-title reveal" data-delay="1">Tools of the trade.</h2>
+      <div class="stack-grid">
+        <div class="glass stack-card reveal" data-delay="1">
+          <h3>Languages &amp; Tools</h3>
+          <div class="hint">Daily drivers for analysis, automation, and versioned research.</div>
+          <div class="pills">
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 8-4 4 4 4"/><path d="m15 8 4 4-4 4"/></svg>Python</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>MNE-Python</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="8" r="2.2"/><path d="M6 8.2v7.6M18 10.2c0 4-4 4.5-7.5 4.8"/></svg>Git</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M12 15h5"/></svg>Bash</span>
+          </div>
+        </div>
+        <div class="glass stack-card reveal" data-delay="2">
+          <h3>Core Domains</h3>
+          <div class="hint">Scientific domains where I apply these tools.</div>
+          <div class="pills">
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08A2.5 2.5 0 0 0 12 19.5Z"/><path d="M12 4.5a2.5 2.5 0 0 1 4.96-.46 2.5 2.5 0 0 1 1.98 3 2.5 2.5 0 0 1 1.32 4.24 3 3 0 0 1-.34 5.58 2.5 2.5 0 0 1-2.96 3.08A2.5 2.5 0 0 1 12 19.5Z"/></svg>Brain-Computer Interfaces (BCI)</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 8L9 4l-3 8H2"/></svg>Neural Signal Decoding</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/></svg>Precision Oncology</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/></svg>Structural Biophysics</span>
+            <span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h8M4 12h12M4 17h6"/><path d="M15 5v4M13 7h4"/><path d="M17 13v4M15 15h4"/></svg>Genomic Data Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="glass contact-card reveal">
+        <div class="section-label" style="justify-content:center;">04 · Contact</div>
+        <h2>Let's build what's next<br />in neuroscience &amp; computational biology.</h2>
+        <p>Open to research collaborations, BCI and genomics questions, or a conversation about neural decoding, p53, and the space between.</p>
+        <div class="hero-actions" style="justify-content:center; margin-bottom: 0;">
+          <a class="btn btn-primary" href="mailto:adityaverma89375@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:none;"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            adityaverma89375@gmail.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ PROJECT MODAL ============ -->
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-glow"></div>
+    <button class="modal-close" id="modalClose" aria-label="Close project details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="modal-head">
+      <div class="modal-icon" id="modalIcon"></div>
+      <div>
+        <h3 id="modalTitle">Project</h3>
+        <span class="tag" id="modalTag">Tag</span>
+      </div>
+    </div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-section">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Architecture</h4>
+      <p class="modal-text" id="modalArch"></p>
+    </div>
+    <div class="modal-section">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.4 5.3L20 9l-4 3.9.9 5.6L12 15.8 7.1 18.5 8 12.9 4 9l5.6-.7z"/></svg>Key Features</h4>
+      <ul class="feature-list" id="modalFeatures"></ul>
+    </div>
+    <div class="modal-section">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/></svg>Tech Stack</h4>
+      <div class="modal-pills" id="modalStack"></div>
+    </div>
+    <div class="modal-links">
+      <a class="btn btn-ghost" id="modalGithub" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      <a class="btn btn-primary" id="modalDemo" href="#">Live Demo</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-note">© 2026 Aditya Verma · <a href="mailto:adityaverma89375@gmail.com">adityaverma89375@gmail.com</a></div>
+    <div class="socials">
+      <a href="mailto:adityaverma89375@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </a>
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11.1 11.1 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.14c0 .3.21.66.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 10);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  navLinks.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => navLinks.classList.remove('open'))
+  );
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('visible'));
+  }
+
+  // Cursor-follow glow on project cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('pointermove', (ev) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+      card.style.setProperty('--my', `${ev.clientY - r.top}px`);
+    });
+  });
+
+  // ---------- Project modal ----------
+  const TECH_ICONS = {
+    'Python': '<path d="m9 8-4 4 4 4"/><path d="m15 8 4 4-4 4"/>',
+    'MNE-Python': '<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>',
+    'PyTorch': '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/>',
+    'WebSockets': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M12 15h5"/>',
+    'Biopython': '<path d="M4 7h8M4 12h12M4 17h6"/><path d="M15 5v4M13 7h4"/><path d="M17 13v4M15 15h4"/>',
+    'PyMOL API': '<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/>',
+    'Bash': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M12 15h5"/>',
+    'JavaScript (D3.js / Canvas)': '<path d="m9 8-4 4 4 4"/><path d="m15 8 4 4-4 4"/><circle cx="12" cy="12" r="9.5"/>',
+    'HTML5': '<path d="M4 3h16l-1.5 16L12 21l-6.5-2L4 3z"/><path d="M8 8h8"/>',
+    'CSS Grid': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'
+  };
+
+  const PROJECT_DATA = {
+    'neuroshield': {
+      title: 'NeuroShield-BCI',
+      tag: 'BCI / Signal Processing',
+      desc: 'Decentralized, privacy-first BCI wearable framework designed for neural data security and real-time EEG signal decoding.',
+      arch: 'EEG signal processing via MNE-Python, real-time feature extraction, and a decentralized data encryption framework spanning the wearable-to-analytics pipeline.',
+      features: [
+        'Privacy-first neural data handling',
+        'Sub-10ms signal decoding pipeline',
+        'Noise-filtering algorithms for wearable-grade EEG'
+      ],
+      stack: ['Python', 'MNE-Python', 'PyTorch', 'WebSockets'],
+      github: 'https://github.com/adityaverma89375-pixel/neuroshield-bci',
+      demo: null
+    },
+    'variant-triage': {
+      title: 'In Silico Variant Triage',
+      tag: 'Computational Biology',
+      desc: 'Analytical pipeline modeling p53 suppressor mutations and protein folding dynamics.',
+      arch: 'Structural biophysics pipeline analyzing missense mutations in p53 tumor suppressor proteins, from sequence input to ranked structural impact.',
+      features: [
+        'Variant impact scoring',
+        'Protein folding stability prediction',
+        'Automated mutation report generation'
+      ],
+      stack: ['Python', 'Biopython', 'PyMOL API', 'Bash'],
+      github: 'https://github.com/',
+      demo: null
+    },
+    'metabolic': {
+      title: 'Metabolic Pathway Simulator',
+      tag: 'Systems Biology',
+      desc: 'Visual modeling platform for cellular respiration and metabolic gene expression.',
+      arch: 'Interactive visual simulation of cellular respiration, glycolysis, and the Krebs cycle, rendered directly in the browser.',
+      features: [
+        'Dynamic enzyme kinetics modeling',
+        'ATP yield tracking across pathways',
+        'Interactive gene expression controls'
+      ],
+      stack: ['JavaScript (D3.js / Canvas)', 'HTML5', 'CSS Grid'],
+      github: 'https://github.com/',
+      demo: null
+    }
+  };
+
+  const backdrop  = document.getElementById('modalBackdrop');
+  const modalClose = document.getElementById('modalClose');
+  const modalIcon = document.getElementById('modalIcon');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalTag = document.getElementById('modalTag');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalArch = document.getElementById('modalArch');
+  const modalFeatures = document.getElementById('modalFeatures');
+  const modalStack = document.getElementById('modalStack');
+  const modalGithub = document.getElementById('modalGithub');
+  const modalDemo = document.getElementById('modalDemo');
+
+  const pillHtml = (t) =>
+    `<span class="pill"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${TECH_ICONS[t] || ''}</svg>${t}</span>`;
+
+  let lastTrigger = null;
+
+  function openModal(key, trigger) {
+    const d = PROJECT_DATA[key];
+    if (!d) return;
+    lastTrigger = trigger || null;
+    modalIcon.innerHTML = PROJECT_ICONS[key] || '';
+    modalTitle.textContent = d.title;
+    modalTag.textContent = d.tag;
+    modalDesc.textContent = d.desc;
+    modalArch.textContent = d.arch;
+    modalFeatures.innerHTML = d.features.map(f => `<li>${f}</li>`).join('');
+    modalStack.innerHTML = d.stack.map(pillHtml).join('');
+    modalGithub.href = d.github;
+    if (d.demo && d.demo !== '#') {
+      modalDemo.href = d.demo;
+      modalDemo.target = '_blank';
+      modalDemo.rel = 'noopener noreferrer';
+      modalDemo.textContent = 'Live Demo';
+      modalDemo.classList.remove('is-disabled');
+      modalDemo.removeAttribute('aria-disabled');
+    } else {
+      modalDemo.href = '#';
+      modalDemo.removeAttribute('target');
+      modalDemo.textContent = 'Demo coming soon';
+      modalDemo.classList.add('is-disabled');
+      modalDemo.setAttribute('aria-disabled', 'true');
+    }
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    if (!backdrop.classList.contains('open')) return;
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastTrigger) lastTrigger.focus();
+  }
+
+  const PROJECT_ICONS = {
+    neuroshield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.45 2.1-1.17 2.83A4 4 0 0 1 12 10a4 4 0 0 1-2.83-1.17A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/><path d="M9.5 10.5 6 14v4"/><path d="M14.5 10.5 18 14v4"/><path d="M6 18h4M14 18h4"/></svg>',
+    'variant-triage': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-2"/><path d="M9 12h6"/></svg>',
+    metabolic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.3 7.2 10 10.4M17.7 7.2 14 10.4M6.3 16.8 10 13.6M17.7 16.8 14 13.6"/></svg>'
+  };
+
+  document.querySelectorAll('.project-card[data-project]').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.project, card));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card.dataset.project, card); }
+    });
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+  });
+  modalDemo.addEventListener('click', (e) => {
+    if (modalDemo.classList.contains('is-disabled')) e.preventDefault();
+  });
+</script>
 </body>
 </html>
