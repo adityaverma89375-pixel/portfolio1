@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aditya Verma — Portfolio</title>
+  <title>Aditya Verma — Computational Biology & BCI Portfolio</title>
   <meta name="description" content="Personal STEM portfolio focusing on computational biology, neurotech, and metabolic pathway modeling." />
   
-  <!-- Open Graph / Social Sharing -->
+  <!-- Open Graph / Social Metadata -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Aditya Verma — Portfolio" />
+  <meta property="og:title" content="Aditya Verma — STEM & Computational Biology Portfolio" />
   <meta property="og:description" content="Engineering computational tools at the intersection of neuroscience, BCIs, and genomics." />
   <meta property="og:url" content="https://portfolio1-five-henna.vercel.app/" />
 
@@ -19,9 +19,10 @@
   <style>
     :root {
       --bg: #0b0f19;
-      --bg-elevated: #0c1524;
       --surface: rgba(255, 255, 255, 0.03);
+      --surface-hover: rgba(255, 255, 255, 0.06);
       --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
       --text: #e8edf5;
       --text-muted: #8b93a7;
       --cyan: #00f2fe;
@@ -45,36 +46,60 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5%; background: rgba(11, 15, 25, 0.8);
+      padding: 0 5%; background: rgba(11, 15, 25, 0.85);
       backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid var(--border);
     }
 
     .nav-logo { font-weight: 700; color: #fff; text-decoration: none; font-size: 1.1rem; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 2rem; transition: color 0.2s; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 2rem; transition: color 0.2s; font-size: 0.95rem; }
     .nav-links a:hover { color: var(--cyan); }
 
-    main { max-width: 1100px; margin: 0 auto; padding: calc(var(--nav-h) + 3rem) 2rem 5rem; }
+    main { max-width: 1100px; margin: 0 auto; padding: calc(var(--nav-h) + 4rem) 2rem 6rem; }
 
     section { margin-bottom: 6rem; }
     
-    .hero h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 1.5rem; }
+    .hero { margin-top: 2rem; }
+    .badge {
+      display: inline-block; padding: 6px 14px; border-radius: 20px;
+      background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.2);
+      color: var(--cyan); font-size: 0.85rem; font-weight: 500; margin-bottom: 1.5rem;
+    }
+    .hero h1 { font-size: 3rem; line-height: 1.2; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
     .hero h1 span { color: var(--cyan); }
-    .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 650px; line-height: 1.6; }
+    .hero p { color: var(--text-muted); font-size: 1.15rem; max-width: 680px; line-height: 1.6; margin-bottom: 2rem; }
+
+    .btn-group { display: flex; gap: 1rem; }
+    .btn {
+      padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none;
+      font-size: 0.95rem; transition: all 0.2s ease;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--cyan), var(--blue)); color: #0b0f19; }
+    .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
 
     .card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem; margin-top: 1.5rem;
+      border-radius: 16px; padding: 2rem; transition: border-color 0.2s, background 0.2s;
     }
+    .card:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+
+    .card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; color: #fff; }
+    .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
 
     .model-controls {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem; margin-bottom: 2rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem; margin-bottom: 2rem; background: rgba(0, 0, 0, 0.2); padding: 1.5rem; border-radius: 12px;
     }
 
     .control-group { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
     .control-group input[type="range"] { accent-color: var(--cyan); }
 
-    /* Force all section visibility instantly */
     .reveal { opacity: 1 !important; transform: none !important; }
   </style>
 </head>
@@ -82,52 +107,104 @@
 
   <nav id="nav">
     <a href="#" class="nav-logo">AV — Aditya Verma</a>
-    <div class="nav-links" id="navLinks">
+    <div class="nav-links">
       <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#model">Metabolic Model</a>
+      <a href="#work">Research</a>
+      <a href="#model">Simulation</a>
+      <a href="#stack">Stack</a>
     </div>
   </nav>
 
   <main>
+    <!-- HERO SECTION -->
     <section class="hero reveal" id="about">
+      <div class="badge">Available for research collaboration</div>
       <h1>Engineering computational tools at the intersection of <span>neuroscience, BCIs, and genomics.</span></h1>
-      <p>Aditya Verma — Researcher focusing on brain-computer interfaces, neural signal decoding, and quantitative cellular kinetics.</p>
+      <p>I build computational biology simulations, neural signal decoding frameworks, and open-source models to analyze biological kinetics and brain-computer interactions.</p>
+      <div class="btn-group">
+        <a href="#work" class="btn btn-primary">Explore Work →</a>
+        <a href="#model" class="btn btn-secondary">Run Live Model</a>
+      </div>
     </section>
 
+    <!-- RESEARCH & PROJECTS -->
+    <section class="reveal" id="work">
+      <h2>Featured Research & Projects</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Metabolic Pathway Kinetic Simulator</h3>
+          <p>Mathematical modeling of enzymatic cascades using ordinary differential equations (ODEs). Simulates substrate consumption and product inhibition in cellular metabolism.</p>
+          <div class="tag-list">
+            <span class="tag">Python</span>
+            <span class="tag">Chart.js</span>
+            <span class="tag">System Dynamics</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>EEG Signal Feature Extraction Pipeline</h3>
+          <p>Preprocessing and bandpower spectral density analysis of motor imagery EEG channels for real-time brain-computer interface signal decoding.</p>
+          <div class="tag-list">
+            <span class="tag">Neurotech</span>
+            <span class="tag">Signal Processing</span>
+            <span class="tag">BCI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SIMULATION -->
     <section class="reveal" id="model">
-      <h2>Interactive Metabolic Pathway Model</h2>
-      <p style="color: var(--text-muted); margin-top: 0.5rem;">Michaelis-Menten kinetic simulation with feedback inhibition loops.</p>
+      <h2>Live Metabolic Model</h2>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Adjust parameters to observe real-time substrate concentration kinetics via Michaelis-Menten equations.</p>
       
-      <div class="card" id="metabolic-model">
+      <div class="card" style="margin-top: 1.5rem;">
         <div class="model-controls">
           <div class="control-group">
-            <label>Substrate Vmax (vmax1)</label>
+            <label>Substrate Vmax ($V_1$)</label>
             <input type="range" id="vmax1" min="1" max="20" value="10" step="0.5">
           </div>
           <div class="control-group">
-            <label>Substrate Km (km1)</label>
+            <label>Substrate Km ($K_1$)</label>
             <input type="range" id="km1" min="0.1" max="10" value="2" step="0.1">
           </div>
           <div class="control-group">
-            <label>Intermediate Vmax (vmax2)</label>
+            <label>Intermediate Vmax ($V_2$)</label>
             <input type="range" id="vmax2" min="1" max="20" value="8" step="0.5">
           </div>
           <div class="control-group">
-            <label>Intermediate Km (km2)</label>
+            <label>Intermediate Km ($K_2$)</label>
             <input type="range" id="km2" min="0.1" max="10" value="1.5" step="0.1">
           </div>
           <div class="control-group">
-            <label>Initial Substrate (S0)</label>
+            <label>Initial Substrate ($S_0$)</label>
             <input type="range" id="s0" min="5" max="100" value="50" step="1">
           </div>
-          <div class="control-group" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+          <div class="control-group" style="flex-direction: row; align-items: center; gap: 0.5rem; justify-content: center;">
             <input type="checkbox" id="feedback" checked>
-            <label for="feedback">Enable Feedback Loop</label>
+            <label for="feedback">Feedback Loop</label>
           </div>
         </div>
 
         <canvas id="metabolicChart" width="800" height="350"></canvas>
+      </div>
+    </section>
+
+    <!-- TECHNICAL STACK -->
+    <section class="reveal" id="stack">
+      <h2>Technical Stack & Expertise</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Computational Bio</h3>
+          <p>Cellular kinetics, metabolic pathway ODE modeling, structural molecular alignment, and sequence analysis.</p>
+        </div>
+        <div class="card">
+          <h3>Data Science & ML</h3>
+          <p>NumPy, SciPy, Pandas, scikit-learn, time-series data analysis, and signal processing filters.</p>
+        </div>
+        <div class="card">
+          <h3>Web & Tools</h3>
+          <p>JavaScript (ES6+), Chart.js, HTML5/CSS3, Git, Vercel, and Linux environments.</p>
+        </div>
       </div>
     </section>
   </main>
