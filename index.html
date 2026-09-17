@@ -421,6 +421,102 @@
     transform: none; box-shadow: none; background: var(--gradient);
   }
 
+  /* ---------- Interactive simulator modals ---------- */
+  .modal--sim { width: min(1020px, 100%); max-height: 90vh; }
+
+  .sim-grid {
+    display: grid; grid-template-columns: 320px 1fr; gap: 28px; margin-top: 26px;
+    align-items: start;
+  }
+  @media (max-width: 860px) { .sim-grid { grid-template-columns: 1fr; } }
+
+  .sim-controls {
+    display: flex; flex-direction: column; gap: 18px;
+    padding: 22px; border-radius: 14px;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  }
+
+  .sim-param-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .sim-param-head label { font-size: 0.88rem; color: var(--text-muted); font-weight: 500; }
+  .sim-param-head output {
+    font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; color: var(--cyan);
+    font-variant-numeric: tabular-nums; background: rgba(0,242,254,0.06);
+    border: 1px solid rgba(0,242,254,0.2); border-radius: 8px; padding: 2px 9px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 22px;
+    background: transparent; cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 5px; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(0,242,254,0.55), rgba(58,123,253,0.55));
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--cyan); border: 2px solid #06121f; margin-top: -6px;
+    box-shadow: 0 0 10px rgba(0,242,254,0.5); transition: transform 0.15s ease;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-track {
+    height: 5px; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(0,242,254,0.55), rgba(58,123,253,0.55));
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--cyan);
+    border: 2px solid #06121f; box-shadow: 0 0 10px rgba(0,242,254,0.5);
+  }
+
+  .sim-check {
+    display: flex; align-items: center; gap: 11px; cursor: pointer;
+    font-size: 0.88rem; color: var(--text-muted); font-weight: 500;
+    user-select: none;
+  }
+  .sim-check input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none; flex: none; cursor: pointer;
+    width: 18px; height: 18px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .sim-check input[type="checkbox"]:checked {
+    background: var(--gradient); border-color: rgba(0,242,254,0.5);
+  }
+  .sim-check input[type="checkbox"]:checked::after {
+    content: ""; display: block; width: 5px; height: 9px;
+    border: solid #06121f; border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(3px, -2px);
+  }
+
+  .sim-reset {
+    padding: 9px 18px; font-size: 0.85rem; border-radius: 10px; width: 100%; justify-content: center;
+  }
+
+  .sim-chart { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .sim-canvas-wrap {
+    position: relative; height: 300px; padding: 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  }
+
+  .sim-readouts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;
+  }
+  .readout {
+    padding: 10px 12px; border-radius: 11px; text-align: center;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  }
+  .readout-label { display: block; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .readout-value {
+    display: block; font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+    color: var(--text); font-variant-numeric: tabular-nums;
+  }
+
+  .sim-note { font-size: 0.78rem; color: var(--text-faint); }
+
+  @media (max-width: 560px) {
+    .modal--sim { padding: 26px 18px; }
+    .sim-canvas-wrap { height: 240px; padding: 10px; }
+  }
+
   @media (max-width: 560px) {
     .modal { padding: 28px 22px; border-radius: 18px; }
     .modal-links .btn { width: 100%; justify-content: center; }
@@ -718,6 +814,83 @@
   </div>
 </div>
 
+<!-- ============ SIMULATOR MODAL ============ -->
+<div class="modal-backdrop" id="simBackdrop" aria-hidden="true">
+  <div class="modal modal--sim" role="dialog" aria-modal="true" aria-labelledby="simTitle">
+    <div class="modal-glow"></div>
+    <button class="modal-close" id="simClose" aria-label="Close simulator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="modal-head">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.3 7.2 10 10.4M17.7 7.2 14 10.4M6.3 16.8 10 13.6M17.7 16.8 14 13.6"/></svg>
+      </div>
+      <div>
+        <h3 id="simTitle">Metabolic Pathway Simulator</h3>
+        <span class="tag">Glycolysis → Krebs · Michaelis–Menten kinetics</span>
+      </div>
+    </div>
+    <p class="modal-desc">Real-time kinetic model of cellular respiration: a substrate is consumed by enzyme E1 (V<sub>max1</sub>, K<sub>m1</sub>) to an intermediate, which enzyme E2 (V<sub>max2</sub>, K<sub>m2</sub>) converts to product. Enable feedback inhibition to let end-product P throttle the first reaction.</p>
+
+    <div class="sim-grid">
+      <div class="sim-controls" id="metabolic-model">
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="vmax1">Substrate V<sub>max</sub> (mM/s)</label>
+            <output id="vmax1-out" for="vmax1">1.00</output>
+          </div>
+          <input type="range" id="vmax1" min="0" max="5" step="0.05" value="1" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="km1">Substrate K<sub>m</sub> (mM)</label>
+            <output id="km1-out" for="km1">0.50</output>
+          </div>
+          <input type="range" id="km1" min="0.05" max="5" step="0.05" value="0.5" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="vmax2">Intermediate V<sub>max</sub> (mM/s)</label>
+            <output id="vmax2-out" for="vmax2">0.80</output>
+          </div>          <input type="range" id="vmax2" min="0" max="5" step="0.05" value="0.8" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="km2">Intermediate K<sub>m</sub> (mM)</label>
+            <output id="km2-out" for="km2">0.30</output>
+          </div>
+          <input type="range" id="km2" min="0.05" max="5" step="0.05" value="0.3" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="s0">Initial Substrate S₀ (mM)</label>
+            <output id="s0-out" for="s0">5.0</output>
+          </div>
+          <input type="range" id="s0" min="0" max="10" step="0.1" value="5" />
+        </div>
+        <div class="sim-param">
+          <label class="sim-check" for="feedback">
+            <input type="checkbox" id="feedback" checked />
+            <span>Feedback inhibition loop (product P inhibits E1)</span>
+          </label>
+        </div>
+        <button type="button" class="btn btn-ghost sim-reset" id="simReset">Reset defaults</button>
+      </div>
+
+      <div class="sim-chart">
+        <div class="sim-readouts">
+          <div class="readout"><span class="readout-label">Peak flux v₁</span><span class="readout-value" id="ro-v1">—</span></div>
+          <div class="readout"><span class="readout-label">Peak flux v₂</span><span class="readout-value" id="ro-v2">—</span></div>
+          <div class="readout"><span class="readout-label">Final ATP equiv.</span><span class="readout-value" id="ro-atp">—</span></div>
+          <div class="readout"><span class="readout-label">Steady state</span><span class="readout-value" id="ro-ss">—</span></div>
+        </div>
+        <div class="sim-canvas-wrap"><canvas id="metabolicChart"></canvas></div>
+        <p class="sim-note">Michaelis–Menten kinetics · explicit Euler integration (dt = 0.1 s) · mass conserved (S + I + P = S₀)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap footer-inner">
     <div class="footer-note">© 2026 Aditya Verma · <a href="mailto:adityaverma89375@gmail.com">adityaverma89375@gmail.com</a></div>
@@ -816,7 +989,8 @@
       ],
       stack: ['Python', 'Biopython', 'PyMOL API', 'Bash'],
       github: 'https://github.com/',
-      demo: null
+      demo: null,
+      simulator: 'triage'
     },
     'metabolic': {
       title: 'Metabolic Pathway Simulator',
@@ -830,7 +1004,8 @@
       ],
       stack: ['JavaScript (D3.js / Canvas)', 'HTML5', 'CSS Grid'],
       github: 'https://github.com/',
-      demo: null
+      demo: null,
+      simulator: 'metabolic'
     }
   };
 
@@ -871,11 +1046,15 @@
       modalDemo.classList.remove('is-disabled');
       modalDemo.removeAttribute('aria-disabled');
     } else {
-      modalDemo.href = '#';
       modalDemo.removeAttribute('target');
-      modalDemo.textContent = 'Demo coming soon';
-      modalDemo.classList.add('is-disabled');
-      modalDemo.setAttribute('aria-disabled', 'true');
+      modalDemo.removeAttribute('href');
+      modalDemo.textContent = d.simulator === 'metabolic' ? 'Launch Simulator'
+        : d.simulator === 'triage' ? 'Launch Pipeline Simulator'
+        : 'Demo coming soon';
+      modalDemo.dataset.sim = d.simulator || '';
+      modalDemo.classList.toggle('is-disabled', !d.simulator);
+      if (d.simulator) modalDemo.removeAttribute('aria-disabled');
+      else modalDemo.setAttribute('aria-disabled', 'true');
     }
     backdrop.classList.add('open');
     backdrop.setAttribute('aria-hidden', 'false');
@@ -909,9 +1088,53 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
   });
+  modalDemo.addEventListener('click', (e) => { if (modalDemo.classList.contains('is-disabled')) e.preventDefault(); });
   modalDemo.addEventListener('click', (e) => {
-    if (modalDemo.classList.contains('is-disabled')) e.preventDefault();
+    if (modalDemo.dataset.sim === 'metabolic') { e.preventDefault(); openSimulator(); }
+    if (modalDemo.dataset.sim === 'triage') { e.preventDefault(); openTriage(); }
+  });
+
+  /* ---------- Metabolic Pathway Simulator ---------- */
+  const simBackdrop = document.getElementById('simBackdrop');
+  const simClose = document.getElementById('simClose');
+  const simResetBtn = document.getElementById('simReset');
+  const SIM_DEFAULTS = { vmax1: 1, km1: 0.5, vmax2: 0.8, km2: 0.3, s0: 5, feedback: true };
+
+  let lastSimTrigger = null;
+  function openSimulator() {
+    if (!simBackdrop) return;
+    lastSimTrigger = modalDemo;
+    simBackdrop.classList.add('open');
+    simBackdrop.setAttribute('open', '');
+    simBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (simClose) simClose.focus();
+  }
+  function closeSimulator() {
+    if (!simBackdrop || !simBackdrop.classList.contains('open')) return;
+    simBackdrop.classList.remove('open');
+    simBackdrop.removeAttribute('open');
+    simBackdrop.setAttribute('aria-hidden', 'true');
+    if (lastSimTrigger) lastSimTrigger.focus();
+  }
+
+  if (simClose) simClose.addEventListener('click', closeSimulator);
+  if (simBackdrop) simBackdrop.addEventListener('click', (e) => { if (e.target === simBackdrop) closeSimulator(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && simBackdrop.classList.contains('open')) closeSimulator();
+  });
+  if (simResetBtn) simResetBtn.addEventListener('click', () => {
+    const el = (id) => document.getElementById(id);
+    el('vmax1').value = SIM_DEFAULTS.vmax1;
+    el('km1').value = SIM_DEFAULTS.km1;
+    el('vmax2').value = SIM_DEFAULTS.vmax2;
+    el('km2').value = SIM_DEFAULTS.km2;
+    el('s0').value = SIM_DEFAULTS.s0;
+    el('feedback').checked = SIM_DEFAULTS.feedback;
+    if (window.runMetabolicSimulation) window.runMetabolicSimulation();
   });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
