@@ -309,6 +309,18 @@
     width: fit-content;
   }
 
+  .tag-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; }
+  .tag-row .tag { margin-top: 0; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #9db9ff; padding: 6px 13px; border-radius: 999px;
+    background: rgba(58, 123, 253, 0.08); border: 1px solid rgba(58, 123, 253, 0.28);
+    width: fit-content;
+  }
+  .ai-badge svg { width: 12px; height: 12px; }
+  .ai-badge[hidden] { display: none; }
+
   .card-index {
     position: absolute; top: 22px; right: 26px;
     font-family: var(--font-display); font-size: 0.8rem; color: var(--text-faint);
@@ -389,6 +401,8 @@
   .modal-icon svg { width: 25px; height: 25px; }
   .modal h3 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.02em; }
   .modal .tag { margin-top: 10px; }
+  .modal-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+  .modal-tags .tag, .modal-tags .ai-badge { margin-top: 0; }
 
   .modal-desc { color: var(--text-muted); font-size: 0.95rem; margin-top: 18px; }
 
@@ -763,8 +777,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5a2 2 0 0 1-.21.9L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45L14.21 10.4a2 2 0 0 1-.21-.9V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
           </div>
           <h3>LabLens</h3>
-          <p>AI web app that turns lab reports into plain-language, educational explanations of what each value measures.</p>
-          <span class="tag">Health Tech / AI</span>
+          <p>AI web app that explains lab reports in plain language — from CBCs and metabolic panels to urinalysis, lipids, and thyroid.</p>
+          <div class="tag-row">
+            <span class="tag">Health Tech / AI</span>
+            <span class="ai-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5v3M17.5 17h3M5.5 16.5v3M4 18h3"/></svg>AI-built · Rork</span>
+          </div>
           <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </article>
       </div>
@@ -832,7 +849,10 @@
       <div class="modal-icon" id="modalIcon"></div>
       <div>
         <h3 id="modalTitle">Project</h3>
-        <span class="tag" id="modalTag">Tag</span>
+        <div class="modal-tags">
+          <span class="tag" id="modalTag">Tag</span>
+          <span class="ai-badge" id="modalAiBadge" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5v3M17.5 17h3M5.5 16.5v3M4 18h3"/></svg>AI-built · Rork</span>
+        </div>
       </div>
     </div>
     <p class="modal-desc" id="modalDesc"></p>
@@ -1126,11 +1146,13 @@
     'lablens': {
       title: 'LabLens',
       tag: 'Health Tech / AI',
-      desc: 'Upload a lab report and get plain-language, educational context for each value — what it measures, common reasons it drifts, and whether it is typically considered high or low.',
-      arch: 'AI-assisted web app built with Rork: client-side report upload, an LLM pipeline that maps each lab value against reference ranges, and a React UI presenting per-value explanations with explicit educational-use framing.',
+      aiBuilt: true,
+      desc: 'Upload a lab report and get plain-language, educational context for each value — what it measures, common reasons it drifts, and whether it is typically considered high or low. Covers CBCs, metabolic panels, urinalysis, lipid profiles, and thyroid panels.',
+      arch: 'Built with Rork through hands-on iteration: I scoped the product flow (upload → per-value breakdown → reference-range context), reviewed and refined the generated code, and tuned the prompt logic so explanations stay educational rather than diagnostic. Supports five report types: complete blood counts (CBC), metabolic panels, urinalysis, lipid profiles, and thyroid panels.',
       features: [
-        'Plain-language explanations for common blood-panel values',
+        'Covers CBC, metabolic panels, urinalysis, lipid profiles, and thyroid panels',
         'High/low reference-range context for each result',
+        'Prompt logic tuned to stay educational — never diagnostic',
         'Clear "not medical advice" disclaimers throughout'
       ],
       stack: ['React', 'OpenAI API', 'Tailwind CSS'],
@@ -1144,6 +1166,7 @@
   const modalIcon = document.getElementById('modalIcon');
   const modalTitle = document.getElementById('modalTitle');
   const modalTag = document.getElementById('modalTag');
+  const modalAiBadge = document.getElementById('modalAiBadge');
   const modalDesc = document.getElementById('modalDesc');
   const modalArch = document.getElementById('modalArch');
   const modalFeatures = document.getElementById('modalFeatures');
@@ -1163,6 +1186,7 @@
     modalIcon.innerHTML = PROJECT_ICONS[key] || '';
     modalTitle.textContent = d.title;
     modalTag.textContent = d.tag;
+    if (modalAiBadge) modalAiBadge.hidden = !d.aiBuilt;
     modalDesc.textContent = d.desc;
     modalArch.textContent = d.arch;
     modalFeatures.innerHTML = d.features.map(f => `<li>${f}</li>`).join('');
