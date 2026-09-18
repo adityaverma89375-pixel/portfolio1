@@ -173,3 +173,195 @@
 
   run(); // initial render with default values
 })();
+
+/* ============================================================
+   In Silico Variant Triage Simulator
+   Synthetic p53 DNA-binding-domain cohort, scored on a
+   Grantham-style physicochemical distance, a ΔΔG folding-stability
+   proxy, and DNA-contact-interface proximity. Fully client-side.
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+  const controls = $('triage-model');
+  const tableWrap = $('triageTable');
+  if (!controls || !tableWrap) return;
+
+  /* ---------- Deterministic PRNG (mulberry32) ---------- */
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ---------- p53 DNA-binding domain residues (94–312) ---------- */
+  const DBD_START = 94, DBD_END = 312;
+
+  // DNA-contact interface clusters (residue ranges known to touch DNA)
+  const CONTACT_ZONES = [
+    [120, 141], [163, 195], [236, 251], [273, 287]
+  ];
+  const isContact = (r) => CONTACT_ZONES.some(([a, b]) => r >= a && r <= b);
+
+  // Hydropathy index (Kyte–Doolittle) — polarity/volume/hydrophobicity proxy
+  const HYDRO = { A: 1.8, R: -4.5, N: -3.5, D: -3.5, C: 2.5, Q: -3.5, E: -3.5, G: -0.4, H: -3.2, I: 4.5, L: 3.8, K: -3.9, M: 1.9, F: 2.8, P: -1.6, S: -0.8, T: -0.7, W: -0.9, Y: -1.3, V: 4.2 };
+  const AMINO = Object.keys(HYDRO);
+  const pickAA = (rng) => AMINO[Math.floor(rng() * AMINO.length)];
+
+  /* ---------- Cohort generation ---------- */
+  function generateCohort(N, driverRate, rng) {
+    const nDrivers = Math.round((driverRate / 100) * N);
+    const variants = [];
+    const used = new Set();
+    for (let i = 0; i < N; i++) {
+      let pos, wt, mut, key;
+      do {
+        pos = DBD_START + Math.floor(rng() * (DBD_END - DBD_START + 1));
+        wt = pickAA(rng);
+        mut = pickAA(rng);
+        key = pos + wt + mut;
+      } while (mut === wt || used.has(key));
+      used.add(key);
+      variants.push({ pos, wt, mut, trueDriver: i < nDrivers, contact: isContact(pos) });
+    }
+    return variants;
+  }
+
+  /* ---------- Scoring model ----------
+     grantham : normalized physicochemical distance |Δhydropathy|/8 + volume term (toy)
+     ddg      : folding-stability loss proxy, larger when hydropathy shifts
+                and the variant sits in a structured (contact) region
+     interface: 1 inside DNA-contact zones, decaying with distance outside
+     score    = w_g·grantham + w_s·ddg + w_i·interface  (+ Gaussian assay noise)
+  */
+  function scoreCohort(cohort, noise, useStruct, rng) {
+    return cohort.map((v) => {
+      const dh = Math.abs(HYDRO[v.mut] - HYDRO[v.wt]);      // 0..8.4
+      const grantham = Math.min(dh / 6, 1);                  // normalized 0..1
+      const iface = v.contact ? 1 : Math.max(0, 1 - (Math.min(
+        Math.abs(v.pos - 130), Math.abs(v.pos - 179),
+        Math.abs(v.pos - 243), Math.abs(v.pos - 280)
+      ) - 10) / 60);
+      const ddg = useStruct
+        ? Math.min(1, 0.35 * grantham + (v.contact ? 0.45 : 0.1) * (0.5 + dh / 8.4))
+        : 0.5 * grantham;
+      const score = Math.min(1, Math.max(0,
+        0.35 * grantham + 0.4 * ddg + 0.25 * iface + (rng() - 0.5) * 2 * noise
+      ));
+      return { ...v, grantham, ddg, interface: iface, score };
+    });
+  }
+
+  function classify(v, threshold) {
+    if (v.score >= threshold) {
+      return v.interface >= 0.9 ? 'Driver' : 'Loss-of-function';
+    }
+    if (v.score >= threshold - 0.15) return 'VUS';
+    return 'Passenger';
+  }
+
+  /* ---------- Chart setup ---------- */
+  const GRID = 'rgba(255,255,255,0.05)';
+  const TICK = '#8b93a7';
+  const CLASS_COLORS = { 'Driver': '#ff6b6b', 'Loss-of-function': '#ffb86b', 'VUS': '#3a7bfd', 'Passenger': '#8b93a7' };
+
+  let chart = null;
+  const sortedCache = [];
+  if (typeof Chart !== 'undefined') {
+    chart = new Chart($('triageChart').getContext('2d'), {
+      type: 'bar',
+      data: { labels: [], datasets: [{ label: 'Composite score', data: [], borderWidth: 0, borderRadius: 4 }] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(14, 21, 36, 0.92)',
+            borderColor: 'rgba(0, 242, 254, 0.3)', borderWidth: 1,
+            titleColor: '#e8edf5', bodyColor: '#8b93a7', padding: 10,
+            callbacks: {
+              label: (ctx) => {
+                const v = sortedCache[ctx.dataIndex];
+                if (!v) return '';
+                return [`score ${v.score.toFixed(3)}`, `${v.wt}→${v.mut} · Grantham ${v.grantham.toFixed(2)} · ΔΔG ${v.ddg.toFixed(2)} · interface ${v.interface.toFixed(2)}`];
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: TICK, font: { size: 10 }, maxRotation: 60, minRotation: 45, autoSkip: false }, grid: { display: false } },
+          y: { title: { display: true, text: 'Composite score', color: TICK }, ticks: { color: TICK, font: { size: 10 } }, grid: { color: GRID }, beginAtZero: true, max: 1 }
+        }
+      }
+    });
+  }
+
+  /* ---------- Renderers ---------- */
+  const fmt = (x, d = 2) => (Number.isFinite(x) ? x.toFixed(d) : '—');
+
+  function renderOutputs(scored, threshold) {
+    const map = { nVariants: 0, driverRate: 0, noise: 2, threshold: 2 };
+    for (const id of Object.keys(map)) {
+      const input = $(id), out = $(id + '-out');
+      if (input && out) out.textContent = fmt(parseFloat(input.value), map[id]);
+    }
+    const drivers = scored.filter((v) => classify(v, threshold) === 'Driver');
+    const lof = scored.filter((v) => classify(v, threshold) === 'Loss-of-function');
+    const tp = drivers.filter((v) => v.trueDriver).length;
+    const truth = scored.filter((v) => v.trueDriver).length;
+    const trD = $('tr-drivers'), trL = $('tr-lof'), trP = $('tr-precision'), trR = $('tr-recall');
+    if (trD) trD.textContent = `${drivers.length} / ${scored.length}`;
+    if (trL) trL.textContent = `${lof.length} / ${scored.length}`;
+    if (trP) trP.textContent = drivers.length ? fmt(tp / drivers.length) : '—';
+    if (trR) trR.textContent = truth ? fmt(tp / truth) : '—';
+  }
+
+  function renderChart(scored, threshold) {
+    if (!chart) return;
+    const sorted = [...scored].sort((a, b) => b.score - a.score);
+    sortedCache.length = 0;
+    sortedCache.push(...sorted);
+    chart.data.labels = sorted.map((v) => `${v.pos}${v.wt}>${v.mut}`);
+    chart.data.datasets[0].data = sorted.map((v) => +v.score.toFixed(3));
+    chart.data.datasets[0].backgroundColor = sorted.map((v) => CLASS_COLORS[classify(v, threshold)]);
+    chart.update('none');
+  }
+
+  function renderTable(scored, threshold) {
+    const badge = (cls) => {
+      const key = cls === 'Driver' ? 'driver' : cls === 'Loss-of-function' ? 'lof' : cls === 'VUS' ? 'vus' : 'passenger';
+      return `<span class="class-badge class-${key}">${cls}</span>`;
+    };
+    const rows = [...scored].sort((a, b) => b.score - a.score).map((v, i) =>
+      `<tr><td>#${i + 1} · ${v.pos}${v.wt}&gt;${v.mut}</td><td>${v.grantham.toFixed(2)}</td><td>${v.ddg.toFixed(2)}</td><td>${v.interface.toFixed(2)}</td><td>${v.score.toFixed(3)}</td><td>${badge(classify(v, threshold))}</td></tr>`
+    ).join('');
+    tableWrap.innerHTML =
+      '<table><thead><tr><th>Variant</th><th>Grantham</th><th>ΔΔG</th><th>Interface</th><th>Score</th><th>Call</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+
+  /* ---------- Entry point (exposed for open/reset wiring) ---------- */
+  function run() {
+    const num = (id) => parseFloat($(id).value);
+    const N = Math.round(num('nVariants'));
+    const rng = mulberry32(0xC0FFEE);           // deterministic seed → stable cohort per run
+    const cohort = generateCohort(N, num('driverRate'), rng);
+    const scored = scoreCohort(cohort, num('noise'), $('structWeight').checked, rng);
+    const threshold = num('threshold');
+    renderOutputs(scored, threshold);
+    renderChart(scored, threshold);
+    renderTable(scored, threshold);
+  }
+  window.runTriageSimulation = run;
+
+  /* ---------- Events: every control updates the triage live ---------- */
+  controls.querySelectorAll('input').forEach((input) => {
+    input.addEventListener('input', run);
+  });
+})();

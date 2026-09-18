@@ -512,6 +512,35 @@
 
   .sim-note { font-size: 0.78rem; color: var(--text-faint); }
 
+  /* Variant triage rank table */
+  .sim-rank-table {
+    overflow: auto; max-height: 220px; border-radius: 12px;
+    border: 1px solid var(--border); background: rgba(255,255,255,0.02);
+    scrollbar-width: thin; scrollbar-color: rgba(0,242,254,0.3) transparent;
+  }
+  .sim-rank-table::-webkit-scrollbar { width: 6px; }
+  .sim-rank-table::-webkit-scrollbar-thumb { background: rgba(0,242,254,0.25); border-radius: 999px; }
+  .sim-rank-table table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.8rem; }
+  .sim-rank-table th, .sim-rank-table td { padding: 7px 12px; white-space: nowrap; }
+  .sim-rank-table thead th {
+    position: sticky; top: 0; background: rgba(14, 21, 36, 0.95);
+    font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-faint); border-bottom: 1px solid var(--border);
+  }
+  .sim-rank-table td {
+    color: var(--text-muted); font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .sim-rank-table td:first-child { text-align: left; color: var(--text); font-weight: 600; }
+  .sim-rank-table .class-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .sim-rank-table .class-driver { color: #ff6b6b; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); }
+  .sim-rank-table .class-lof { color: #ffb86b; background: rgba(255,184,107,0.1); border: 1px solid rgba(255,184,107,0.3); }
+  .sim-rank-table .class-vus { color: #3a7bfd; background: rgba(58,123,253,0.1); border: 1px solid rgba(58,123,253,0.3); }
+  .sim-rank-table .class-passenger { color: #8b93a7; background: rgba(139,147,167,0.1); border: 1px solid rgba(139,147,167,0.3); }
+
   @media (max-width: 560px) {
     .modal--sim { padding: 26px 18px; }
     .sim-canvas-wrap { height: 240px; padding: 10px; }
@@ -891,6 +920,78 @@
   </div>
 </div>
 
+<!-- ============ VARIANT TRIAGE SIMULATOR MODAL ============ -->
+<div class="modal-backdrop" id="triageBackdrop" aria-hidden="true">
+  <div class="modal modal--sim" role="dialog" aria-modal="true" aria-labelledby="triageTitle">
+    <div class="modal-glow"></div>
+    <button class="modal-close" id="triageClose" aria-label="Close variant triage simulator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="modal-head">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-2"/><path d="M9 12h6"/></svg>
+      </div>
+      <div>
+        <h3 id="triageTitle">In Silico Variant Triage</h3>
+        <span class="tag">p53 DNA-binding domain · Grantham + ΔΔG + interface scoring</span>
+      </div>
+    </div>
+    <p class="modal-desc">Rank missense variants across the p53 DNA-binding domain (residues 94–312). Each substitution is scored on amino-acid severity (Grantham-style physicochemical distance), predicted folding-stability loss (ΔΔG proxy), and proximity to the DNA-contact interface — then called as Driver, Loss-of-function, VUS, or Passenger.</p>
+
+    <div class="sim-grid">
+      <div class="sim-controls" id="triage-model">
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="nVariants">Variants to triage (N)</label>
+            <output id="nVariants-out" for="nVariants">12</output>
+          </div>
+          <input type="range" id="nVariants" min="4" max="24" step="1" value="12" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="driverRate">True driver fraction (%)</label>
+            <output id="driverRate-out" for="driverRate">30</output>
+          </div>
+          <input type="range" id="driverRate" min="0" max="80" step="5" value="30" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="noise">Assay noise σ</label>
+            <output id="noise-out" for="noise">0.10</output>
+          </div>
+          <input type="range" id="noise" min="0" max="0.5" step="0.05" value="0.1" />
+        </div>
+        <div class="sim-param">
+          <div class="sim-param-head">
+            <label for="threshold">Driver score threshold</label>
+            <output id="threshold-out" for="threshold">0.60</output>
+          </div>
+          <input type="range" id="threshold" min="0.2" max="0.9" step="0.05" value="0.6" />
+        </div>
+        <div class="sim-param">
+          <label class="sim-check" for="structWeight">
+            <input type="checkbox" id="structWeight" checked />
+            <span>Weight structural ΔΔG term (vs. sequence-only)</span>
+          </label>
+        </div>
+        <button type="button" class="btn btn-ghost sim-reset" id="triageReset">Reset defaults</button>
+      </div>
+
+      <div class="sim-chart">
+        <div class="sim-readouts">
+          <div class="readout"><span class="readout-label">Drivers called</span><span class="readout-value" id="tr-drivers">—</span></div>
+          <div class="readout"><span class="readout-label">LoF variants</span><span class="readout-value" id="tr-lof">—</span></div>
+          <div class="readout"><span class="readout-label">Precision</span><span class="readout-value" id="tr-precision">—</span></div>
+          <div class="readout"><span class="readout-label">Recall</span><span class="readout-value" id="tr-recall">—</span></div>
+        </div>
+        <div class="sim-canvas-wrap"><canvas id="triageChart"></canvas></div>
+        <div class="sim-rank-table" id="triageTable"></div>
+        <p class="sim-note">Synthetic cohort (deterministic seed) · Grantham-style distance (polarity + volume + hydrophobicity) · ΔΔG approximated from hydrophobicity shift · thresholds illustrative</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap footer-inner">
     <div class="footer-note">© 2026 Aditya Verma · <a href="mailto:adityaverma89375@gmail.com">adityaverma89375@gmail.com</a></div>
@@ -1115,6 +1216,7 @@
     simBackdrop.classList.remove('open');
     simBackdrop.removeAttribute('open');
     simBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
     if (lastSimTrigger) lastSimTrigger.focus();
   }
 
@@ -1132,6 +1234,47 @@
     el('s0').value = SIM_DEFAULTS.s0;
     el('feedback').checked = SIM_DEFAULTS.feedback;
     if (window.runMetabolicSimulation) window.runMetabolicSimulation();
+  });
+
+  /* ---------- Variant Triage Simulator ---------- */
+  const triageBackdrop = document.getElementById('triageBackdrop');
+  const triageClose = document.getElementById('triageClose');
+  const triageResetBtn = document.getElementById('triageReset');
+  const TRIAGE_DEFAULTS = { nVariants: 12, driverRate: 30, noise: 0.1, threshold: 0.6, structWeight: true };
+
+  let lastTriageTrigger = null;
+  function openTriage() {
+    if (!triageBackdrop) return;
+    lastTriageTrigger = modalDemo;
+    triageBackdrop.classList.add('open');
+    triageBackdrop.setAttribute('open', '');
+    triageBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (triageClose) triageClose.focus();
+    if (window.runTriageSimulation) window.runTriageSimulation();
+  }
+  function closeTriage() {
+    if (!triageBackdrop || !triageBackdrop.classList.contains('open')) return;
+    triageBackdrop.classList.remove('open');
+    triageBackdrop.removeAttribute('open');
+    triageBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastTriageTrigger) lastTriageTrigger.focus();
+  }
+
+  if (triageClose) triageClose.addEventListener('click', closeTriage);
+  if (triageBackdrop) triageBackdrop.addEventListener('click', (e) => { if (e.target === triageBackdrop) closeTriage(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && triageBackdrop.classList.contains('open')) closeTriage();
+  });
+  if (triageResetBtn) triageResetBtn.addEventListener('click', () => {
+    const el = (id) => document.getElementById(id);
+    el('nVariants').value = TRIAGE_DEFAULTS.nVariants;
+    el('driverRate').value = TRIAGE_DEFAULTS.driverRate;
+    el('noise').value = TRIAGE_DEFAULTS.noise;
+    el('threshold').value = TRIAGE_DEFAULTS.threshold;
+    el('structWeight').checked = TRIAGE_DEFAULTS.structWeight;
+    if (window.runTriageSimulation) window.runTriageSimulation();
   });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
