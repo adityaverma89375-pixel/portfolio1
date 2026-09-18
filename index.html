@@ -672,7 +672,7 @@
         <a class="btn btn-ghost" href="#contact">Contact</a>
       </div>
       <div class="hero-stats">
-        <div class="stat"><div class="num">3</div><div class="lbl">Featured projects</div></div>
+        <div class="stat"><div class="num">4</div><div class="lbl">Featured projects</div></div>
         <div class="stat"><div class="num">5</div><div class="lbl">Research domains</div></div>
         <div class="stat"><div class="num">EEG</div><div class="lbl">Real-time decoding focus</div></div>
       </div>
@@ -753,6 +753,18 @@
           <h3>Metabolic Pathway Simulator</h3>
           <p>Visual modeling platform for cellular respiration and metabolic gene expression.</p>
           <span class="tag">Systems Biology</span>
+          <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </article>
+
+        <article class="glass project-card reveal tilt clickable" data-delay="1" data-project="lablens" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View LabLens details">
+          <span class="top-line"></span>
+          <span class="card-index">04</span>
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5a2 2 0 0 1-.21.9L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45L14.21 10.4a2 2 0 0 1-.21-.9V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+          </div>
+          <h3>LabLens</h3>
+          <p>AI web app that turns lab reports into plain-language, educational explanations of what each value measures.</p>
+          <span class="tag">Health Tech / AI</span>
           <span class="project-link-hint">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </article>
       </div>
@@ -1060,7 +1072,10 @@
     'Bash': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M12 15h5"/>',
     'JavaScript (D3.js / Canvas)': '<path d="m9 8-4 4 4 4"/><path d="m15 8 4 4-4 4"/><circle cx="12" cy="12" r="9.5"/>',
     'HTML5': '<path d="M4 3h16l-1.5 16L12 21l-6.5-2L4 3z"/><path d="M8 8h8"/>',
-    'CSS Grid': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'
+    'CSS Grid': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+    'React': '<circle cx="12" cy="12" r="1.8"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"/>',
+    'OpenAI API': '<path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5v3M17.5 17h3M5.5 16.5v3M4 18h3"/>',
+    'Tailwind CSS': '<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 14h15a3 3 0 1 1-3 3"/>'
   };
 
   const PROJECT_DATA = {
@@ -1107,6 +1122,20 @@
       github: 'https://github.com/',
       demo: null,
       simulator: 'metabolic'
+    },
+    'lablens': {
+      title: 'LabLens',
+      tag: 'Health Tech / AI',
+      desc: 'Upload a lab report and get plain-language, educational context for each value — what it measures, common reasons it drifts, and whether it is typically considered high or low.',
+      arch: 'AI-assisted web app built with Rork: client-side report upload, an LLM pipeline that maps each lab value against reference ranges, and a React UI presenting per-value explanations with explicit educational-use framing.',
+      features: [
+        'Plain-language explanations for common blood-panel values',
+        'High/low reference-range context for each result',
+        'Clear "not medical advice" disclaimers throughout'
+      ],
+      stack: ['React', 'OpenAI API', 'Tailwind CSS'],
+      github: null,
+      demo: 'https://lab-result-explainer.rork.app/'
     }
   };
 
@@ -1138,7 +1167,13 @@
     modalArch.textContent = d.arch;
     modalFeatures.innerHTML = d.features.map(f => `<li>${f}</li>`).join('');
     modalStack.innerHTML = d.stack.map(pillHtml).join('');
-    modalGithub.href = d.github;
+    if (d.github) {
+      modalGithub.href = d.github;
+      modalGithub.style.display = '';
+    } else {
+      modalGithub.removeAttribute('href');
+      modalGithub.style.display = 'none';
+    }
     if (d.demo && d.demo !== '#') {
       modalDemo.href = d.demo;
       modalDemo.target = '_blank';
@@ -1174,7 +1209,8 @@
   const PROJECT_ICONS = {
     neuroshield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.45 2.1-1.17 2.83A4 4 0 0 1 12 10a4 4 0 0 1-2.83-1.17A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/><path d="M9.5 10.5 6 14v4"/><path d="M14.5 10.5 18 14v4"/><path d="M6 18h4M14 18h4"/></svg>',
     'variant-triage': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-2"/><path d="M9 12h6"/></svg>',
-    metabolic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.3 7.2 10 10.4M17.7 7.2 14 10.4M6.3 16.8 10 13.6M17.7 16.8 14 13.6"/></svg>'
+    metabolic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.3 7.2 10 10.4M17.7 7.2 14 10.4M6.3 16.8 10 13.6M17.7 16.8 14 13.6"/></svg>',
+    lablens: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5a2 2 0 0 1-.21.9L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45L14.21 10.4a2 2 0 0 1-.21-.9V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>'
   };
 
   document.querySelectorAll('.project-card[data-project]').forEach(card => {
