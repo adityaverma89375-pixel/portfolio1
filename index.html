@@ -882,6 +882,7 @@
     </div>
     <div class="modal-links">
       <a class="btn btn-ghost" id="modalGithub" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      <a class="btn btn-ghost" id="modalPreprint" href="https://zenodo.org/records/23451346" target="_blank" rel="noopener noreferrer" style="display:none;">Published Preprint</a>
       <a class="btn btn-primary" id="modalDemo" href="#">Live Demo</a>
     </div>
   </div>
@@ -1185,6 +1186,7 @@
       ],
       stack: ['ODE Modeling', 'HTML5'],
       github: null,
+      preprint: 'https://zenodo.org/records/23451346',
       demo: 'https://synapse-mbkzzdbc.manus.space/'
     }
   };
@@ -1200,6 +1202,7 @@
   const modalFeatures = document.getElementById('modalFeatures');
   const modalStack = document.getElementById('modalStack');
   const modalGithub = document.getElementById('modalGithub');
+  const modalPreprint = document.getElementById('modalPreprint');
   const modalDemo = document.getElementById('modalDemo');
 
   const pillHtml = (t) =>
@@ -1225,6 +1228,15 @@
     } else {
       modalGithub.removeAttribute('href');
       modalGithub.style.display = 'none';
+    }
+    if (d.preprint && modalPreprint) {
+      modalPreprint.href = d.preprint;
+      modalPreprint.target = '_blank';
+      modalPreprint.rel = 'noopener noreferrer';
+      modalPreprint.style.display = '';
+    } else if (modalPreprint) {
+      modalPreprint.removeAttribute('href');
+      modalPreprint.style.display = 'none';
     }
     if (d.demo && d.demo !== '#') {
       modalDemo.href = d.demo;
