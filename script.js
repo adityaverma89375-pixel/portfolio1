@@ -15,7 +15,7 @@
 
   /* ---------- Chart setup ---------- */
   const GRID = 'rgba(255,255,255,0.05)';
-  const TICK = '#8b93a7';
+  const TICK = '#6f5561';
   const isDark = document.body.classList.contains('light-theme') === false;
 
   let chart = null;
@@ -25,10 +25,10 @@
       data: {
         labels: [],
         datasets: [
-          { label: 'Substrate (S)',   data: [], borderColor: '#00f2fe', borderWidth: 2, pointRadius: 0, tension: 0.25 },
-          { label: 'Intermediate (I)', data: [], borderColor: '#3a7bfd', borderWidth: 2, pointRadius: 0, tension: 0.25 },
-          { label: 'Product (P)',      data: [], borderColor: '#e8edf5', borderWidth: 2, pointRadius: 0, tension: 0.25 },
-          { label: 'Total mass (S+I+P)', data: [], borderColor: '#8b93a7', borderDash: [4, 4], borderWidth: 1, pointRadius: 0, tension: 0.25 }
+          { label: 'Substrate (S)',   data: [], borderColor: '#c05a89', borderWidth: 2, pointRadius: 0, tension: 0.25 },
+          { label: 'Intermediate (I)', data: [], borderColor: '#a86f8e', borderWidth: 2, pointRadius: 0, tension: 0.25 },
+          { label: 'Product (P)',      data: [], borderColor: '#3d2632', borderWidth: 2, pointRadius: 0, tension: 0.25 },
+          { label: 'Total mass (S+I+P)', data: [], borderColor: '#6f5561', borderDash: [4, 4], borderWidth: 1, pointRadius: 0, tension: 0.25 }
         ]
       },
       options: {
@@ -38,18 +38,18 @@
         plugins: {
           legend: {
             labels: {
-              color: isDark ? TICK : '#333',
+              color: isDark ? TICK : '#4a3540',
               boxWidth: 14,
               boxHeight: 2,
               font: { family: 'Inter, sans-serif', size: 11 }
             }
           },
           tooltip: {
-            backgroundColor: 'rgba(14, 21, 36, 0.92)',
-            borderColor: 'rgba(0, 242, 254, 0.3)',
+            backgroundColor: 'rgba(253, 246, 249, 0.96)',
+            borderColor: 'rgba(192, 90, 137, 0.35)',
             borderWidth: 1,
-            titleColor: '#e8edf5',
-            bodyColor: '#8b93a7',
+            titleColor: '#3d2632',
+            bodyColor: '#6f5561',
             padding: 10
           }
         },
@@ -268,8 +268,8 @@
 
   /* ---------- Chart setup ---------- */
   const GRID = 'rgba(255,255,255,0.05)';
-  const TICK = '#8b93a7';
-  const CLASS_COLORS = { 'Driver': '#ff6b6b', 'Loss-of-function': '#ffb86b', 'VUS': '#3a7bfd', 'Passenger': '#8b93a7' };
+  const TICK = '#6f5561';
+  const CLASS_COLORS = { 'Driver': '#d04545', 'Loss-of-function': '#b96f16', 'VUS': '#a86f8e', 'Passenger': '#6f5561' };
 
   let chart = null;
   const sortedCache = [];
@@ -283,9 +283,9 @@
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(14, 21, 36, 0.92)',
-            borderColor: 'rgba(0, 242, 254, 0.3)', borderWidth: 1,
-            titleColor: '#e8edf5', bodyColor: '#8b93a7', padding: 10,
+            backgroundColor: 'rgba(253, 246, 249, 0.96)',
+            borderColor: 'rgba(192, 90, 137, 0.35)', borderWidth: 1,
+            titleColor: '#3d2632', bodyColor: '#6f5561', padding: 10,
             callbacks: {
               label: (ctx) => {
                 const v = sortedCache[ctx.dataIndex];
