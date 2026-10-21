@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Is Meta-cognition really a thing?? — Aditya Verma</title>
+<meta name="description" content="An essay on metacognition — mapping the 'consultant in your head' onto the prefrontal cortex, the ACC error-detection chain, and reciprocal neural loops." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f7ebef;
+    --surface: rgba(255, 255, 255, 0.55);
+    --border: rgba(122, 72, 96, 0.14);
+    --text: #3d2632;
+    --text-muted: #6f5561;
+    --text-faint: #927982;
+    --accent: #c05a89;
+    --gradient: linear-gradient(135deg, #ef9dbf 0%, #c05a89 100%);
+    --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+    --font-body: "Inter", "Segoe UI", sans-serif;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(180deg, rgba(255, 249, 251, 0.18) 0%, rgba(250, 238, 243, 0.55) 30%, rgba(247, 235, 240, 0.90) 62%, rgba(247, 235, 240, 0.97) 100%),
+      url('assets/bg-clouds.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: rgba(192, 90, 137, 0.35); color: #fff; }
+
+  .page { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .back {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent); text-decoration: none;
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.02em;
+    margin-bottom: 40px;
+    transition: gap 0.2s ease;
+  }
+  .back:hover { gap: 12px; }
+  .back svg { width: 15px; height: 15px; }
+
+  .article-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 52px 56px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 24px 60px rgba(122, 72, 96, 0.10);
+  }
+
+  .kicker {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+
+  .byline {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    color: var(--text-faint); font-size: 0.88rem;
+    padding-bottom: 28px; margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .byline strong { color: var(--text-muted); font-weight: 600; }
+  .byline .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); }
+
+  p { color: var(--text-muted); font-size: 1.0rem; margin-bottom: 22px; }
+  p.lead { font-size: 1.08rem; color: var(--text); }
+  p strong { color: var(--text); font-weight: 600; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.32rem; font-weight: 600; letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 42px 0 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h2::before {
+    content: ""; flex: none;
+    width: 4px; height: 22px; border-radius: 999px;
+    background: var(--gradient);
+  }
+
+  .tier-list { list-style: none; margin: 0 0 26px; display: grid; gap: 12px; }
+  .tier-list li {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text-muted); font-size: 0.95rem;
+    display: flex; gap: 12px; align-items: baseline;
+  }
+  .tier-list .n {
+    font-family: var(--font-display); font-weight: 600;
+    color: var(--accent); font-size: 0.85rem; flex: none;
+  }
+  .tier-list strong { color: var(--text); font-weight: 600; }
+
+  blockquote {
+    margin: 26px 0;
+    padding: 18px 22px;
+    border-left: 3px solid var(--accent);
+    background: rgba(239, 157, 191, 0.10);
+    border-radius: 0 12px 12px 0;
+    color: var(--text-muted); font-size: 0.93rem;
+  }
+  blockquote .cap {
+    display: block; margin-top: 8px;
+    font-size: 0.78rem; color: var(--text-faint);
+    font-style: italic;
+  }
+
+  .verdict {
+    margin-top: 40px;
+    padding: 24px 28px;
+    border-radius: 14px;
+    background: var(--gradient);
+    color: #fff;
+  }
+  .verdict h2 { color: #fff; margin: 0 0 10px; }
+  .verdict h2::before { background: rgba(255, 255, 255, 0.55); }
+  .verdict p { color: rgba(255, 255, 255, 0.94); margin: 0; font-weight: 500; }
+
+  .foot {
+    margin-top: 34px; text-align: center;
+    color: var(--text-faint); font-size: 0.84rem;
+  }
+  .foot a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .foot a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .article-card { padding: 34px 24px; }
+    .page { padding: 36px 16px 72px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Back to portfolio
+    </a>
+
+    <article class="article-card">
+      <span class="kicker">Essay · Cognitive Neuroscience</span>
+      <h1>Is Meta-cognition really a thing??</h1>
+      <div class="byline">
+        <strong>Aditya Verma</strong>
+        <span class="dot"></span>
+        <span>October 2026</span>
+        <span class="dot"></span>
+        <span>6 min read</span>
+      </div>
+
+      <p class="lead"><strong>META-COGNITION!!</strong> A well-known identity — I'm pretty sure that y'all must've heard about this term quite a few times, through social media, books, podcasts etc etc. But what does it actually mean?? Many people online explain it as "the ability to think about your own thoughts". Sounds pretty straightforward, right? Yes it does — but it isn't. So let's break it down.</p>
+
+      <h2>First of all — what is meta-cognition?</h2>
+      <p>"Thinking about your own thoughts" is pretty spot on, but it's actually a lot more than that. Think of meta-cognition as a <strong>consultant sitting inside your brain</strong> — you tell him each and every one of your thoughts, he re-thinks about it, and guides you on what's the best pick.</p>
+      <p>But <strong>who is this consultant, actually?</strong> If we dive deep, it turns out your brain has a separate, optimized kind of real estate inside this skull. When you're just processing a raw thought, your neural and motor network does all the weight lifting. But the moment you start thinking <em>about</em> it — analyzing it — the real estate (your prefrontal cortex) steps in.</p>
+
+      <h2>The catch: it's not a superpower</h2>
+      <p>Before diving into that part, there's a catch. I've seen many creators advertising this as a "god gift" or a "superpower", and that's a complete lie. <strong>Everyone — YES, EVERYONE — can train his/her brain to this level.</strong> It's like training a muscle, a biological skill. Every time you pause to re-evaluate your own logic, question a snap judgement, question your own thinking — congrats, you just trained and improved your cognitive abilities.</p>
+
+      <h2>The real estate, in three sub-tiers</h2>
+      <p>So basically, this mental real estate is divided into three sub tiers:</p>
+      <ul class="tier-list">
+        <li><span class="n">01</span><span><strong>The Executive Desk</strong> — the Prefrontal Cortex</span></li>
+        <li><span class="n">02</span><span><strong>The Error-Detection Chain</strong> — the Anterior Cingulate Cortex</span></li>
+        <li><span class="n">03</span><span><strong>The Feedback Management System</strong> — the Reciprocal Neural Loops</span></li>
+      </ul>
+
+      <h2>The Executive Desk — the Prefrontal Cortex</h2>
+      <p>This area acts like the consultant's main desk. It relentlessly analyzes brain signals to compute a <strong>"confidence score"</strong> before you make any decision — in more scientific terms, this is <strong>meta-cognitive monitoring and control</strong>, and it primarily takes place in the lateral and anterior prefrontal cortex (aPFC / dlPFC). Raw sensory inputs are handled by the posterior region.</p>
+      <p>The aPFC performs <strong>second-order computations</strong> — evaluating the accuracy of your first-order actions. It serves as a native architecture for analyzing the confidence score before you take your shot.</p>
+
+      <h2>The Error-Detection Chain — the Anterior Cingulate Cortex</h2>
+      <p>Have you ever experienced catching a mistake right after making it?? That's your ACC firing an impulse called the <strong>Error-Related Negativity wave (ERN)</strong> — under 100 ms of messing up, resolving errors before your conscious mind even notices.</p>
+      <blockquote>
+        When a person makes an error, the ACC fires constant electrical signals (ERNs) even before the conscious brain is aware of it. It detects conflict and signals to the rest of the brain that a course correction — or a pause in snap judgment — is required.
+        <span class="cap">Performance Monitoring and Error-Related Negativity in neurobiology.</span>
+      </blockquote>
+
+      <h2>The Feedback Management System — the Reciprocal Neural Loops</h2>
+      <p>The information flow inside your brain isn't uni-directional. Your brain's metacognitive circuits send real-time data and feedback back <em>down</em> the pathway to alter your strategy, focus, or stop a bad decision — via the <strong>thalamocortical and frontostriatal loops</strong>.</p>
+      <p>Metacognition cannot happen in isolation. The brain relies on bidirectional, "top-down" and "bottom-up" feedback loops. The lateral prefrontal cortex interacts closely with the ACC and subcortical structures. The lower regions pass up the raw prediction errors, and the higher-order prefrontal tiers use those reciprocal loops to adjust cognitive control, tune focus, or alter behavior on subsequent tasks.</p>
+
+      <div class="verdict">
+        <h2>The verdict</h2>
+        <p>We can isolate distinct neural markers — like ACC error-tracking and aPFC confidence modulation — that are structurally separate from basic motor execution networks. Metacognition is a verifiable biological reality, not just internet hype or a "superpower" buzzword.</p>
+      </div>
+    </article>
+
+    <p class="foot">Written by <strong>Aditya Verma</strong> · <a href="index.html#work">See all work</a></p>
+  </main>
+</body>
+</html>
