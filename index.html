@@ -93,6 +93,37 @@
   }
   nav.scrolled { border-bottom-color: var(--border); background: rgba(252, 246, 248, 0.90); }
 
+  /* Cursor-follow glow */
+  .cursor-glow {
+    position: fixed; top: 0; left: 0;
+    width: 340px; height: 340px;
+    margin: -170px 0 0 -170px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192, 90, 137, 0.20), rgba(239, 157, 191, 0.10) 45%, transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    will-change: transform;
+  }
+  .cursor-dot {
+    position: fixed; top: 0; left: 0;
+    width: 10px; height: 10px;
+    margin: -5px 0 0 -5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 14px rgba(192, 90, 137, 0.85);
+    pointer-events: none;
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    will-change: transform;
+  }
+  .cursor-glow.on, .cursor-dot.on { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-glow, .cursor-dot { display: none; }
+  }
   .nav-inner {
     max-width: var(--max-width); margin: 0 auto; height: 100%; padding: 0 24px;
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -658,6 +689,8 @@
 <div class="bg-glow bg-glow--one" aria-hidden="true"></div>
 <div class="bg-glow bg-glow--two" aria-hidden="true"></div>
 <div class="bg-glow bg-glow--three" aria-hidden="true"></div>
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
 
 <nav id="nav">
   <div class="nav-inner">
@@ -1415,6 +1448,46 @@
     el('structWeight').checked = TRIAGE_DEFAULTS.structWeight;
     if (window.runTriageSimulation) window.runTriageSimulation();
   });
+
+  // Cursor-follow glow (fine pointers only; off for touch & reduced motion)
+  (function () {
+    const fine = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const glow = document.querySelector('.cursor-glow');
+    const dot = document.querySelector('.cursor-dot');
+    if (!glow || !dot || !fine || reduce) return;
+
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+    let gx = tx, gy = ty;
+    let shown = false;
+
+    window.addEventListener('pointermove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!shown) {
+        shown = true;
+        gx = tx; gy = ty;
+        glow.classList.add('on');
+        dot.classList.add('on');
+      }
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => {
+      glow.classList.remove('on');
+      dot.classList.remove('on');
+    });
+    document.documentElement.addEventListener('mouseenter', () => {
+      if (!shown) return;
+      glow.classList.add('on');
+      dot.classList.add('on');
+    });
+
+    (function tick() {
+      gx += (tx - gx) * 0.12;
+      gy += (ty - gy) * 0.12;
+      glow.style.transform = 'translate3d(' + gx + 'px,' + gy + 'px,0)';
+      dot.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,0)';
+      requestAnimationFrame(tick);
+    })();
+  })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="script.js"></script>
